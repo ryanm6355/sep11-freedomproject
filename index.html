@@ -107,17 +107,13 @@
               zombieBody.object3D.rotation.y = 180;
             }
             document.querySelector(`#zombieSound${Math.floor(Math.random() * 7)+1}`).components.sound.playSound();
-              }
-            if(isPaused == true){
-              document.querySelectorAll('#zombie').pause();
-            }
-          else if(isPaused == false){
-            document.querySelectorAll('#zombie').play();
-          }
-            zombieBody.addEventListener('hit',() => {
+                zombieBody.addEventListener('hit',() => {
               document.querySelector("a-scene").removeChild(zombieBody);
               document.querySelector("#kill").components.sound.playSound();
             });
+              }
+            
+            
             
             
            
