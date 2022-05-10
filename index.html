@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="../script.js"></script>
+    <script>
+      var healthCounter = 5;
+      var isPaused = false;
+      AFRAME.registerComponent('zombie-infestation',{
+        init: function(){
+          document.querySelector("#healthbar").setAttribute('value',`Health: ${healthCounter}`);
+          const myTimer = setInterval(timer,5000);
+          function timer(){
+              if(isPaused == false){
+            //creates zombies body
+                      var zombieBody = document.createElement('a-box');
+          zombieBody.setAttribute('geometry',`depth: 0.5`);
+            let coordinates = [];
+            arrayAddition();
+            zombieBody.object3D.position.x = coordinates[0];
+            zombieBody.object3D.position.y = 1.5;
+            zombieBody.object3D.position.z = coordinates[1];
+            coordinates = [];
+          zombieBody.setAttribute('material',`color:#45a2b5`);
+            zombieBody.setAttribute('animation', `property: position;to: 0 1.5 0;dur: 5000`);
+            zombieBody.setAttribute('target','static:false');
+            zombieBody.id = "zombie";
+            function arrayAddition(){
+              
+                var choice = [0,20,-20];
+                coordinates.unshift(choice[Math.floor(Math.random()*3)]);
+                if(coordinates[0] !== 0 ){
+                  coordinates.push(Math.floor(Math.random()*20));
+                }
+                else{
+                  coordinates.shift();
+                  coordinates.unshift(Math.floor(Math.random()*20));
+                  coordinates.push(choice[Math.floor(Math.random() * (3-1)+1)]);
+                }
+              }
+            
+            //creates left eye
+            var leftEye = document.createElement('a-circle');
+          leftEye.setAttribute('geometry',`radius: 0.25`);
+            leftEye.object3D.position.x = -0.245;
+            leftEye.object3D.position.y = 0.833;
+            leftEye.object3D.position.z = 0.3;
+            leftEye.setAttribute('material',`color:red`);
+              zombieBody.appendChild(leftEye);
+            
+            //creates right eye
+            var rightEye = document.createElement('a-circle');
+            rightEye.setAttribute('geometry',`radius: 0.25`);
+            rightEye.object3D.position.x = 0.245;
+            rightEye.object3D.position.y = 0.833;
+            rightEye.object3D.position.z = 0.3;
+            rightEye.setAttribute('material',`color:red`);
+          zombieBody.appendChild(rightEye);
+            
+            //creates zombie head
+            var zombieHead = document.createElement('a-box');
+            zombieHead.setAttribute('geometry',`height: 0.75;depth:0.5`);
+            zombieHead.object3D.position.x = 0;
+            zombieHead.object3D.position.y = 0.866;
+            zombieHead.setAttribute('material',`color: #2dcd40`);
+            zombieBody.appendChild(zombieHead);
+            
+            //creates left arm
+            var leftArm = document.createElement('a-box');
+            leftArm.setAttribute('geometry',`width:0.5;depth:0.5`);
+            leftArm.setAttribute('material',`color: #2dcd40`);
+            leftArm.object3D.position.x = 0.75;
+            zombieBody.appendChild(leftArm);
+            
+            //creates right arm
+            var rightArm = document.createElement('a-box');
+            rightArm.setAttribute('geometry',`width:0.5;depth:0.5`);
+            rightArm.setAttribute('material',`color: #2dcd40`);
+            rightArm.object3D.position.x = -0.75;
+            zombieBody.appendChild(rightArm);
+            
+            //creates left leg
+             var leftLeg = document.createElement('a-box');
+            leftLeg.setAttribute('geometry',`width:0.5;depth:0.5`);
+            leftLeg.setAttribute('material',`color: #2dcd40`);
+            leftLeg.object3D.position.x = 0.25;
+            leftLeg.object3D.position.y = -1;
+            zombieBody.appendChild(leftLeg);
+            
+            //creates right leg
+            var rightLeg = document.createElement('a-box');
+            rightLeg.setAttribute('geometry',`width:0.5;depth:0.5`);
+            rightLeg.setAttribute('material',`color: #2dcd40`);
+            rightLeg.object3D.position.x = -0.25;
+            rightLeg.object3D.position.y = -1;
+            zombieBody.appendChild(rightLeg);
+            document.querySelector('a-scene').appendChild(zombieBody);
+            
+            //rotates zombie based on where it is
+            if(zombieBody.object3D.position.x == -20){
+              zombieBody.object3D.rotation.y = 90;
+            }
+            else if(zombieBody.object3D.position.x == 20){
+              zombieBody.object3D.rotation.y = -90;
+            }
+            else if(zombieBody.object3D.position.z == 20){
+              zombieBody.object3D.rotation.y = 180;
+            }
+            document.querySelector(`#zombieSound${Math.floor(Math.random() * 7)+1}`).components.sound.playSound();
+              }
+            if(isPaused == true){
+              document.querySelectorAll('#zombie').pause();
+            }
+          else if(isPaused == false){
+            document.querySelectorAll('#zombie').play();
+          }
+            zombieBody.addEventListener('hit',() => {
+              document.querySelector("a-scene").removeChild(zombieBody);
+              document.querySelector("#kill").components.sound.playSound();
+            });
+            
+            
+           
+          }
+          
+          
+          setInterval(function(){document.querySelectorAll('#zombie').forEach(function(event){
+              if(event.object3D.position.x >= -0.5 && event.object3D.position.x <= 0.5 && event.object3D.position.z >= -0.5 && event.object3D.position.z <= 0.5){
+                if(healthCounter > 0){
+document.querySelector("#bite").components.sound.playSound();
+                }
+                document.querySelector("a-scene").removeChild(event);
+                healthCounter--;
+              document.querySelector("#healthbar").setAttribute('value',`Health: ${healthCounter}`);
+                if(healthCounter <= 0){
+              document.querySelector("#healthbar").setAttribute('value',`Game Over!`);
+              document.querySelector("#gameover").components.sound.playSound();
+              clearInterval(myTimer);
+              document.querySelectorAll("#zombie").forEach(function(event){
+                document.querySelector("a-scene").removeChild(event);
+              })
+              document.querySelector("a-camera").removeAttribute('spacetoshoot');
+            } 
+              }
+            }
+        );
+                                },100);
+          }})
+      AFRAME.registerComponent("spacetoshoot",{
+        init:function(){
+          document.body.addEventListener('keypress', (event) => { 
+            if(event.keyCode == 32){
+              this.el.emit('shoot');
+              document.querySelector("#gunshot").components.sound.playSound();}});
+        }
+      });
+      AFRAME.registerComponent("pausefunction",{
+        init:function(){
+          document.body.addEventListener('keypress', (event) => {
+            if(event.keyCode == 80){
+              isPaused = !isPaused;
+              console.log('isPaused');
+            }
+          })
+        }
+      })
+    </script>
+  </head>
+ 
+  <body>
+    <a-scene zombie-infestation pausefunction>
+      <a-assets>
+    </a-assets>
+<!--       <a-box material="color: #45a2b5" position="0 1.5 -2" geometry="depth: 0.5"> -->
+<!--       <a-box geometry="height: 0.75; depth: 0.5" material="color: #2dcd40" position = "0 0.866 0"></a-box>
+        <a-circle geometry="radius:0.25" position="-0.245 0.883 0.3" material="color:red"></a-circle>
+        <a-circle geometry="radius:0.25" position="0.245 0.883 0.3" material="color:red"></a-circle>
+        <a-box position="0.75" geometry="width:0.5;depth:0.5" material="color: #2dcd40"></a-box>
+        <a-box position="-0.75" geometry="width:0.5;depth:0.5" material="color: #2dcd40"></a-box>
+        <a-box position="-0.25 -1 0" geometry="width:0.5;depth:0.5" material="color: #2dcd40"></a-box>
+        <a-box position="0.25 -1 0" geometry="width:0.5;depth:0.5" material="color: #2dcd40"></a-box>
+      </a-box> -->
+      <a-entity id="bullet" bullet="name: normal;speed: 15.0;poolSize: 1" material="color: white" geometry="primitive:sphere;radius: 0.1"></a-entity>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="100%" height="100%" color="#d4922f"></a-plane>
+      <a-sky src="https://th.bing.com/th/id/OIP.LAM-v37SHvzpR_RuUhexzgHaMl?pid=ImgDet&rs=1"></a-sky>
+      <a-entity id="zombieSound1" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/ZombieSound1.mp3?v=1646509730637"></a-entity>
+      <a-entity id="zombieSound2" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/ZombieSound2.mp3?v=1646509726098"></a-entity>
+      <a-entity id="zombieSound3" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/ZombieSound3.mp3?v=1646509734242"></a-entity>
+      <a-entity id="zombieSound4" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/ZombieSound4.mp3?v=1646510160959"></a-entity>
+      <a-entity id="zombieSound5" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/ZombieSound5.mp3?v=1646510227942"></a-entity>
+      <a-entity id="zombieSound6" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/ZombieSound6.mp3?v=1646510251813"></a-entity>
+      <a-entity id="zombieSound7" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/ZombieSound7.mp3?v=1646510290079"></a-entity>
+      <a-entity id="kill" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/Neck%20Snapping%20Sound%20Effect%20(Royalty%20Free)%20(128%20kbps)-%5BAudioTrimmer.com%5D.mp3?v=1650823496825"></a-entity>
+      <a-entity id="gunshot" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/GunSound.mp3?v=1646511023826;poolSize:10"></a-entity>
+      <a-entity id="gameover" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/The%20Howie%20Scream.mp3?v=1650819404455"></a-entity>
+      <a-entity id="bite" sound="src: https://cdn.glitch.global/8c98b338-bb72-4e30-939b-25ff81b57e6e/Blood%20Splatter%20Sound%20Effect%20_%20Horror%20Sounds%20(128%20kbps)-%5BAudioTrimmer.com%5D.mp3?v=1650820213219"></a-entity>
+      <a-camera id="shooter" wasd-controls="enabled: false" shooter="activeBulletType: normal" look-controls="pointerLockEnabled:true" spacetoshoot><a-text id="healthbar" position="-1.75 0.75 -1"></a-text><a-cursor></a-cursor></a-camera>
+    </a-scene>
+  </body>
+</html>
