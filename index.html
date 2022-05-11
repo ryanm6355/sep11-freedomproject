@@ -11,6 +11,7 @@
           document.querySelector("#healthbar").setAttribute('value',`Health: ${healthCounter}`);
           const myTimer = setInterval(timer,5000);
           function timer(){
+            if(isPaused == false){
             //creates zombies body
                       var zombieBody = document.createElement('a-box');
           zombieBody.setAttribute('geometry',`depth: 0.5`);
@@ -110,6 +111,7 @@
               document.querySelector("a-scene").removeChild(zombieBody);
               document.querySelector("#kill").components.sound.playSound();
             });
+            }
             
             
             
