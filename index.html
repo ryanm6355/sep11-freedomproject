@@ -154,7 +154,12 @@ document.querySelector("#bite").components.sound.playSound();
         init:function(){
           document.body.addEventListener('keypress', (event) => {
             if(event.keyCode == 80){
-              isPaused = !isPaused;
+              if(isPaused == false){
+                isPaused = true;
+              }
+              else if(isPaused == true){
+                isPaused = false;
+              }
               console.log('isPaused');
             }
           })
