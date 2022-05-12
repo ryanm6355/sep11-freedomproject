@@ -146,8 +146,11 @@ document.querySelector("#bite").components.sound.playSound();
         init:function(){
           document.body.addEventListener('keypress', (event) => { 
             if(event.keyCode == 32){
+              if(isPaused == false){
               this.el.emit('shoot');
-              document.querySelector("#gunshot").components.sound.playSound();}});
+              document.querySelector("#gunshot").components.sound.playSound();
+              }
+            }
         }
       });
       AFRAME.registerComponent("pausefunction",{
@@ -160,12 +163,12 @@ document.querySelector("#bite").components.sound.playSound();
               else if(isPaused == true){
                 isPaused = false;
               }
-              if(document.querySelector('#shooter').hasAttribute('shooter') == true){
-              document.querySelector('#shooter').removeAttribute('shooter');
-              }
-              if(document.querySelector('#shooter').hasAttribute('shooter') == false){
-                document.querySelector('#shooter').setAttribute('shooter',`activeBulletType: normal`);
-              }
+//               if(document.querySelector('#shooter').hasAttribute('shooter') == true){
+//               document.querySelector('#shooter').removeAttribute('shooter');
+//               }
+//               if(document.querySelector('#shooter').hasAttribute('shooter') == false){
+//                 document.querySelector('#shooter').setAttribute('shooter',`activeBulletType: normal`);
+//               }
               console.log(isPaused);
             }
           })
