@@ -160,13 +160,13 @@ document.querySelector("#bite").components.sound.playSound();
               else if(isPaused == true){
                 isPaused = false;
               }
-              if(document.querySelector('#shooter').hasAttribute('spacetoshoot') == true){
-              document.querySelector('#shooter').removeAttribute('spacetoshoot');
+              if(document.querySelector('#shooter').hasAttribute('shooter') == true){
+              document.querySelector('#shooter').removeAttribute('shooter');
               }
-              if(document.querySelector('#shooter').hasAttribute('spacetoshoot') == false){
-                document.querySelector('#shooter').setAttribute('spacetoshoot');
+              if(document.querySelector('#shooter').hasAttribute('shooter') == false){
+                document.querySelector('#shooter').setAttribute('shooter',`activeBulletType: normal`);
               }
-              console.log('isPaused');
+              console.log(isPaused);
             }
           })
         }
