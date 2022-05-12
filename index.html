@@ -160,6 +160,7 @@ document.querySelector("#bite").components.sound.playSound();
               else if(isPaused == true){
                 isPaused = false;
               }
+              document.querySelector("#shooter").toggleAttribute("spacetoshoot");
               console.log('isPaused');
             }
           })
