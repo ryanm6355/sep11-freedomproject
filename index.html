@@ -172,6 +172,7 @@ document.querySelector("#bite").components.sound.playSound();
               if(isPaused == false){
                 isPaused = true;
                 document.querySelector("#healthbar").setAttribute('value','Paused!');
+                 document.querySelector("#shooter").setAttribute('look-controls', 'enabled', false); 
                 document.querySelector("#zombie").emit('animationPaused');
                 
               
@@ -179,6 +180,7 @@ document.querySelector("#bite").components.sound.playSound();
               else if(isPaused == true){
                 isPaused = false;
                 document.querySelector("#healthbar").setAttribute('value',`Health:${healthCounter}`)
+                document.querySelector("#shooter").setAttribute('look-controls', 'enabled', true); 
                 document.querySelector("#zombie").emit('animationResumed');
               }
               console.log(isPaused);
